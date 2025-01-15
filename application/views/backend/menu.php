@@ -34,6 +34,48 @@
                   <p>Data Kelas</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="<?php echo base_url('Data_biaya') ?>" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Data Biaya</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?php echo base_url('Data_seragam') ?>" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Data Seragam</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="nav-item ">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                Pendaftaran
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="<?php echo base_url('Pendaftaran_awal') ?>" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>pendaftaran awal</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?php echo base_url('Pendaftaran_akhir') ?>" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Pendaftaran Akhir</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="<?php echo base_url('Pendaftaran_pembatalan') ?>" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Pendaftaran Pembatalan</p>
+                </a>
+              </li>
             </ul>
           </li>
 

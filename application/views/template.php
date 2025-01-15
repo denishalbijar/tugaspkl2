@@ -73,6 +73,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 					<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 						<!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
+			   
 						<?php isset($menu) ? $this->load->view($menu) : print_r('no-menu'); ?>
 					</ul>
 				</nav>
@@ -126,10 +127,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 		<footer class="main-footer">
 			<!-- To the right -->
 			<div class="float-right d-none d-sm-inline">
-				Anything you want
 			</div>
 			<!-- Default to the left -->
-			<strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+			<strong>Copyright &copy; 2014-2025 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
 		</footer>
 	</div>
 	<!-- ./wrapper -->
