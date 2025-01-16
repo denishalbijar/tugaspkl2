@@ -180,34 +180,38 @@ class Masterdata_model extends CI_Model
 		return $this->db->affected_rows();
 	}
 
-    // Jenis Biaya Methods
+    // Ambil semua jenis biaya
     public function getAllJenisBiaya()
     {
         return $this->db->get($this->tableBiaya)->result_array();
     }
 
+    // Ambil jenis biaya berdasarkan ID
+    public function getJenisBiayaById($id)
+    {
+        return $this->db->get_where($this->tableBiaya, ['id' => $id])->row(); 
+    }
+
+    // Simpan jenis biaya baru
     public function saveJenisBiaya($jenis_biaya)
-	{
-    $data = ['jenis_biaya' => $jenis_biaya];
-    return $this->db->insert($this->tableBiaya, $data);
-	}
-	
-    public function editJenisBiaya($id, $jenis_biaya)
+    {
+        $this->db->insert($this->tableBiaya, ['jenis_biaya' => $jenis_biaya]);
+    }
+
+    // Update jenis biaya
+    public function updateJenisBiaya($id, $jenis_biaya)
     {
         $this->db->where('id', $id);
         $this->db->update($this->tableBiaya, ['jenis_biaya' => $jenis_biaya]);
     }
 
+    // Hapus jenis biaya
     public function deleteJenisBiaya($id)
     {
         $this->db->where('id', $id);
         $this->db->delete($this->tableBiaya);
     }
 
-    public function getJenisBiayaById($id)
-    {
-        return $this->db->get_where($this->tableBiaya, ['id' => $id])->row();
-    }
 
     // Harga Biaya Methods
     public function getAllHargaBiaya()

@@ -25,52 +25,26 @@ class Data_biaya extends CI_Controller
         echo json_encode($data);
     }
 
-    public function getAllHargaBiaya()
-    {
-        $data = $this->md->getAllHargaBiaya();
-        echo json_encode($data);
-    }
-
-    public function getAllTahunPelajaran()
-    {
-        $data = $this->md->getAllTahunPelajaran(); // Ambil data tahun pelajaran
-        echo json_encode($data);
-    }
-
-
-    public function saveHargaBiaya()
-    {
-        $id_tahun_pelajaran = $this->input->post('id_tahun_pelajaran');
-        $jenis_biaya = $this->input->post('jenis_biaya');
-        $harga = $this->input->post('harga');
-        $this->md->saveHargaBiaya($id_tahun_pelajaran, $jenis_biaya, $harga);
-        echo json_encode(['status' => true, 'message' => 'Harga Biaya berhasil disimpan!']);
-    }
-
-
     public function saveJenisBiaya()
     {
-        $jenis_biaya = $this->input->post('jenis_biaya', true); // Menggunakan XSS filter
+        $id = $this->input->post('id', true); // Ambil ID
+        $jenis_biaya = $this->input->post('jenis_biaya', true); // Ambil jenis biaya
+
+        // Validasi jika jenis biaya kosong
         if (!empty($jenis_biaya)) {
-            $this->md->saveJenisBiaya($jenis_biaya);
-            $response = ['status' => true, 'message' => 'Jenis Biaya berhasil disimpan!'];
+            if (!empty($id)) {
+                // Update jenis biaya jika ID ada
+                $this->md->updateJenisBiaya($id, $jenis_biaya);
+                $response = ['status' => true, 'message' => 'Jenis Biaya berhasil diperbarui!'];
+            } else {
+                // Insert data baru jika ID kosong
+                $this->md->saveJenisBiaya($jenis_biaya);
+                $response = ['status' => true, 'message' => 'Jenis Biaya berhasil disimpan!'];
+            }
         } else {
             $response = ['status' => false, 'message' => 'Jenis Biaya tidak boleh kosong.'];
         }
-        echo json_encode($response);
-    }
 
-    public function editJenisBiaya()
-    {
-        $id = $this->input->post('id', true);
-        $jenis_biaya = $this->input->post('jenis_biaya', true);
-
-        if (!empty($id) && !empty($jenis_biaya)) {
-            $this->md->editJenisBiaya($id, $jenis_biaya);
-            $response = ['status' => true, 'message' => 'Jenis Biaya berhasil diperbarui!'];
-        } else {
-            $response = ['status' => false, 'message' => 'Data tidak valid.'];
-        }
         echo json_encode($response);
     }
 
@@ -84,6 +58,40 @@ class Data_biaya extends CI_Controller
             $response = ['status' => false, 'message' => 'ID tidak valid.'];
         }
         echo json_encode($response);
+    }
+
+    public function getJenisBiayaById()
+    {
+        $id = $this->input->get('id', true);
+        if (!empty($id)) {
+            $data = $this->md->getJenisBiayaById($id);
+            echo json_encode(['status' => true, 'data' => $data]);
+        } else {
+            echo json_encode(['status' => false, 'message' => 'ID tidak valid.']);
+        }
+    }
+
+    public function getAllHargaBiaya()
+    {
+        $data = $this->md->getAllHargaBiaya();
+        echo json_encode($data);
+    }
+
+    public function getAllTahunPelajaran()
+    {
+        $data = $this->md->getAllTahunPelajaran(); // Ambil data tahun pelajaran
+        echo json_encode($data);
+    }
+
+
+
+    public function saveHargaBiaya()
+    {
+        $id_tahun_pelajaran = $this->input->post('id_tahun_pelajaran');
+        $jenis_biaya = $this->input->post('jenis_biaya');
+        $harga = $this->input->post('harga');
+        $this->md->saveHargaBiaya($id_tahun_pelajaran, $jenis_biaya, $harga);
+        echo json_encode(['status' => true, 'message' => 'Harga Biaya berhasil disimpan!']);
     }
 
     public function deleteHargaBiaya()

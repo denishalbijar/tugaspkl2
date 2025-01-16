@@ -136,7 +136,7 @@ $(document).ready(function() {
             type: 'GET',
             dataType: 'json',
             success: function(response) {
-                let select = $('#id_tahun_pelajaran');
+                let select = $('id_tahun_pelajaran');
                 select.html('<option value="">- Pilih Tahun Pelajaran -</option>');
                 response.forEach(item => {
                     select.append(`<option value="${item.id}">${item.tahun_pelajaran}</option>`);
@@ -145,35 +145,6 @@ $(document).ready(function() {
             error: function(xhr, status, error) {
                 console.error("Error fetching Tahun Pelajaran:", error);
                 alert("Gagal memuat data Tahun Pelajaran.");
-            }
-        });
-    }
-
-    // Load Jenis Biaya
-    function loadJenisBiaya() {
-        $.ajax({
-            url: 'data_biaya/getAllJenisBiaya',
-            type: 'GET',
-            dataType: 'json',
-            success: function(response) {
-                let tbody = $('#tableJenisBiaya tbody');
-                tbody.empty();
-                response.forEach((item, index) => {
-                    tbody.append(`
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td>${item.jenis_biaya}</td>
-                            <td>
-                                <button class="btn btn-primary" onclick="editJenisBiaya(${item.id})">Edit</button>
-                                <button class="btn btn-danger" onclick="deleteJenisBiaya(${item.id})">Hapus</button>
-                            </td>
-                        </tr>
-                    `);
-                });
-            },
-            error: function(xhr, status, error) {
-                console.error("Error fetching Jenis Biaya:", error);
-                alert("Gagal memuat data Jenis Biaya.");
             }
         });
     }
@@ -209,40 +180,8 @@ $(document).ready(function() {
         });
     }
 
-    // Tambah Jenis Biaya
-    $('.btnTambahJenisBiaya').click(function() {
-        $('#formJenisBiaya').trigger('reset');
-        $('#jenis_biaya_id').val('');
-        $('#modalJenisBiaya').modal('show');
-    });
+    
 
-    // Simpan Jenis Biaya
-    $('.saveJenisBiayaBtn').click(function() {
-        const jenisBiaya = $('#jenis_biaya').val();
-        const id = $('#jenis_biaya_id').val();
-
-        if (!jenisBiaya.trim()) {
-            alert("Jenis Biaya tidak boleh kosong!");
-            return;
-        }
-
-        const url = id ? 'data_biaya/updateJenisBiaya' : 'data_biaya/saveJenisBiaya';
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: { id, jenis_biaya: jenisBiaya },
-            dataType: 'json',
-            success: function(response) {
-                alert(response.message);
-                $('#modalJenisBiaya').modal('hide');
-                loadJenisBiaya();
-            },
-            error: function(xhr, status, error) {
-                console.error("Error saving Jenis Biaya:", error);
-                alert("Gagal menyimpan data Jenis Biaya.");
-            }
-        });
-    });
 
     // Tambah Harga Biaya
     $('.btnTambahHargaBiaya').click(function() {
@@ -281,38 +220,6 @@ $(document).ready(function() {
         });
     });
 
-    // Fungsi global Edit & Hapus
-    window.editJenisBiaya = function(id) {
-        $.ajax({
-            url: 'data_biaya/getJenisBiayaById',
-            type: 'GET',
-            data: { id },
-            success: function(response) {
-                if (response) {
-                    $('#jenis_biaya_id').val(response.id);
-                    $('#jenis_biaya').val(response.jenis_biaya);
-                    $('#modalJenisBiaya').modal('show');
-                } else {
-                    alert("Data tidak ditemukan!");
-                }
-            }
-        });
-    };
-
-    window.deleteJenisBiaya = function(id) {
-        if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
-            $.ajax({
-                url: 'data_biaya/deleteJenisBiaya',
-                type: 'POST',
-                data: { id },
-                success: function(response) {
-                    alert(response.message);
-                    loadJenisBiaya();
-                }
-            });
-        }
-    };
-
     window.editHargaBiaya = function(id) {
         $.ajax({
             url: 'data_biaya/getHargaBiayaById',
@@ -342,4 +249,112 @@ $(document).ready(function() {
         }
     };
 });
+
+// Load Jenis Biaya
+function loadJenisBiaya() {
+        $.ajax({
+            url: 'data_biaya/getAllJenisBiaya',
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                let tbody = $('#tableJenisBiaya tbody');
+                tbody.empty();
+                response.forEach((item, index) => {
+                    tbody.append(`
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${item.jenis_biaya}</td>
+                            <td>
+                                <button class="btn btn-primary" onclick="editJenisBiaya(${item.id})">Edit</button>
+                                <button class="btn btn-danger" onclick="deleteJenisBiaya(${item.id})">Hapus</button>
+                            </td>
+                        </tr>
+                    `);
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching Jenis Biaya:", error);
+                alert("Gagal memuat data Jenis Biaya.");
+            }
+        });
+    }
+
+    // Tambah Jenis Biaya
+    $('.btnTambahJenisBiaya').click(function() {
+        $('#formJenisBiaya').trigger('reset');
+        $('#jenis_biaya_id').val('');
+        $('#modalJenisBiaya').modal('show');
+    });
+
+    // Simpan Jenis Biaya
+    $('.saveJenisBiayaBtn').click(function() {
+        const id = $('#jenis_biaya_id').val();
+        const jenisBiaya = $('#jenis_biaya').val();
+
+        if (!jenisBiaya.trim()) {
+            alert("Jenis Biaya tidak boleh kosong!");
+            return;
+        }
+
+        $.ajax({
+            url: 'data_biaya/saveJenisBiaya',
+            type: 'POST',
+            data: { id: id, jenis_biaya: jenisBiaya },
+            dataType: 'json',
+            success: function(response) {
+                alert(response.message);
+                $('#modalJenisBiaya').modal('hide');
+                loadJenisBiaya();
+            },
+            error: function(xhr, status, error) {
+                console.error("Error saving Jenis Biaya:", error);
+                alert("Gagal menyimpan data Jenis Biaya.");
+            }
+        });
+    });
+
+    // Edit Jenis Biaya
+    window.editJenisBiaya = function(id) {
+        $.ajax({
+            url: 'data_biaya/getJenisBiayaById',
+            type: 'GET',
+            data: { id: id },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === true) {
+                    $('#jenis_biaya_id').val(response.data.id);
+                    $('#jenis_biaya').val(response.data.jenis_biaya);
+                    $('#modalJenisBiaya').modal('show');
+                } else {
+                    alert("Data tidak ditemukan!");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching Jenis Biaya:", error);
+                alert("Gagal memuat data Jenis Biaya.");
+            }
+        });
+    };
+
+    // Hapus Jenis Biaya
+    window.deleteJenisBiaya = function(id) {
+        if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+            $.ajax({
+                url: 'data_biaya/deleteJenisBiaya',
+                type: 'POST',
+                data: { id },
+                dataType: 'json',
+                success: function(response) {
+                    alert(response.message);
+                    loadJenisBiaya();
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error deleting Jenis Biaya:", error);
+                    alert("Gagal menghapus data Jenis Biaya.");
+                }
+            });
+        }
+    };
+
+
 </script>
