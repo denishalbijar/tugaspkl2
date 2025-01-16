@@ -37,12 +37,6 @@ class Data_biaya extends CI_Controller
         echo json_encode($data);
     }
 
-    public function saveJenisBiaya()
-    {
-        $jenis_biaya = $this->input->post('jenis_biaya');
-        $this->md->saveJenisBiaya($jenis_biaya);
-        echo json_encode(['status' => true, 'message' => 'Jenis Biaya berhasil disimpan!']);
-    }
 
     public function saveHargaBiaya()
     {
@@ -53,26 +47,43 @@ class Data_biaya extends CI_Controller
         echo json_encode(['status' => true, 'message' => 'Harga Biaya berhasil disimpan!']);
     }
 
+
+    public function saveJenisBiaya()
+    {
+        $jenis_biaya = $this->input->post('jenis_biaya', true); // Menggunakan XSS filter
+        if (!empty($jenis_biaya)) {
+            $this->md->saveJenisBiaya($jenis_biaya);
+            $response = ['status' => true, 'message' => 'Jenis Biaya berhasil disimpan!'];
+        } else {
+            $response = ['status' => false, 'message' => 'Jenis Biaya tidak boleh kosong.'];
+        }
+        echo json_encode($response);
+    }
+
     public function editJenisBiaya()
     {
-        $id = $this->input->post('id');
-        $jenis_biaya = $this->input->post('jenis_biaya');
-        $this->md->editJenisBiaya($id, $jenis_biaya);
-        echo json_encode(['status' => true, 'message' => 'Jenis Biaya berhasil diperbarui!']);
+        $id = $this->input->post('id', true);
+        $jenis_biaya = $this->input->post('jenis_biaya', true);
+
+        if (!empty($id) && !empty($jenis_biaya)) {
+            $this->md->editJenisBiaya($id, $jenis_biaya);
+            $response = ['status' => true, 'message' => 'Jenis Biaya berhasil diperbarui!'];
+        } else {
+            $response = ['status' => false, 'message' => 'Data tidak valid.'];
+        }
+        echo json_encode($response);
     }
 
     public function deleteJenisBiaya()
     {
-        $id = $this->input->post('id');
-        $this->md->deleteJenisBiaya($id);
-        echo json_encode(['status' => true, 'message' => 'Jenis Biaya berhasil dihapus!']);
-    }
-
-    public function getJenisBiayaById()
-    {
-        $id = $this->input->get('id');
-        $data = $this->md->getJenisBiayaById($id);
-        echo json_encode($data);
+        $id = $this->input->post('id', true);
+        if (!empty($id)) {
+            $this->md->deleteJenisBiaya($id);
+            $response = ['status' => true, 'message' => 'Jenis Biaya berhasil dihapus!'];
+        } else {
+            $response = ['status' => false, 'message' => 'ID tidak valid.'];
+        }
+        echo json_encode($response);
     }
 
     public function deleteHargaBiaya()

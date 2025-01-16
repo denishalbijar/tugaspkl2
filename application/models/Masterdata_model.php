@@ -187,11 +187,11 @@ class Masterdata_model extends CI_Model
     }
 
     public function saveJenisBiaya($jenis_biaya)
-    {
-        $data = ['jenis_biaya' => $jenis_biaya];
-        $this->db->insert($this->tableBiaya, $data);
-    }
-
+	{
+    $data = ['jenis_biaya' => $jenis_biaya];
+    return $this->db->insert($this->tableBiaya, $data);
+	}
+	
     public function editJenisBiaya($id, $jenis_biaya)
     {
         $this->db->where('id', $id);

@@ -124,169 +124,187 @@
 
 <script>
 $(document).ready(function() {
+    // Load initial data
     loadJenisBiaya();
     loadHargaBiaya();
     loadTahunPelajaran();
 
-    // Load data for Tahun Pelajaran
+    // Load Tahun Pelajaran
     function loadTahunPelajaran() {
         $.ajax({
             url: 'data_biaya/getAllTahunPelajaran',
             type: 'GET',
             dataType: 'json',
             success: function(response) {
-                let tahunPelajaranSelect = $('#id_tahun_pelajaran');
-                tahunPelajaranSelect.html('<option value="">- Pilih Tahun Pelajaran -</option>');
-                $.each(response, function(i, item) {
-                    tahunPelajaranSelect.append('<option value="' + item.id + '">' + item.tahun_pelajaran + '</option>');
+                let select = $('#id_tahun_pelajaran');
+                select.html('<option value="">- Pilih Tahun Pelajaran -</option>');
+                response.forEach(item => {
+                    select.append(`<option value="${item.id}">${item.tahun_pelajaran}</option>`);
                 });
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching Tahun Pelajaran:", error);
+                alert("Gagal memuat data Tahun Pelajaran.");
             }
         });
     }
 
-    // Load data for Jenis Biaya
+    // Load Jenis Biaya
     function loadJenisBiaya() {
         $.ajax({
             url: 'data_biaya/getAllJenisBiaya',
             type: 'GET',
             dataType: 'json',
             success: function(response) {
-                let table = $('#tableJenisBiaya');
-                table.find('tbody').html('');
-                let no = 1;
-                $.each(response, function(i, item) {
-                    let tr = $('<tr>');
-                    tr.append('<td>' + no++ + '</td>');
-                    tr.append('<td>' + item.jenis_biaya + '</td>');
-                    tr.append('<td><button class="btn btn-primary" onclick="editJenisBiaya(' + item.id + ')">Edit</button> <button class="btn btn-danger" onclick="deleteJenisBiaya(' + item.id + ')">Delete</button></td>');
-                    table.find('tbody').append(tr);
+                let tbody = $('#tableJenisBiaya tbody');
+                tbody.empty();
+                response.forEach((item, index) => {
+                    tbody.append(`
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${item.jenis_biaya}</td>
+                            <td>
+                                <button class="btn btn-primary" onclick="editJenisBiaya(${item.id})">Edit</button>
+                                <button class="btn btn-danger" onclick="deleteJenisBiaya(${item.id})">Hapus</button>
+                            </td>
+                        </tr>
+                    `);
                 });
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching Jenis Biaya:", error);
+                alert("Gagal memuat data Jenis Biaya.");
             }
         });
     }
 
-    // Load data for Harga Biaya
+    // Load Harga Biaya
     function loadHargaBiaya() {
         $.ajax({
             url: 'data_biaya/getAllHargaBiaya',
             type: 'GET',
             dataType: 'json',
             success: function(response) {
-                let table = $('#tableHargaBiaya');
-                table.find('tbody').html('');
-                let no = 1;
-                $.each(response, function(i, item) {
-                    let tr = $('<tr>');
-                    tr.append('<td>' + no++ + '</td>');
-                    tr.append('<td>' + item.tahun_pelajaran + '</td>');
-                    tr.append('<td>' + item.jenis_biaya + '</td>');
-                    tr.append('<td>' + item.harga + '</td>');
-                    tr.append('<td><button class="btn btn-primary" onclick="editHargaBiaya(' + item.id + ')">Edit</button> <button class="btn btn-danger" onclick="deleteHargaBiaya(' + item.id + ')">Delete</button></td>');
-                    table.find('tbody').append(tr);
+                let tbody = $('#tableHargaBiaya tbody');
+                tbody.empty();
+                response.forEach((item, index) => {
+                    tbody.append(`
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${item.tahun_pelajaran}</td>
+                            <td>${item.jenis_biaya}</td>
+                            <td>${item.harga}</td>
+                            <td>
+                                <button class="btn btn-primary" onclick="editHargaBiaya(${item.id})">Edit</button>
+                                <button class="btn btn-danger" onclick="deleteHargaBiaya(${item.id})">Hapus</button>
+                            </td>
+                        </tr>
+                    `);
                 });
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching Harga Biaya:", error);
+                alert("Gagal memuat data Harga Biaya.");
             }
         });
     }
 
-    // Add new Jenis Biaya
+    // Tambah Jenis Biaya
     $('.btnTambahJenisBiaya').click(function() {
         $('#formJenisBiaya').trigger('reset');
-        $('#jenis_biaya_id').val('');  // Reset ID field for new entry
+        $('#jenis_biaya_id').val('');
         $('#modalJenisBiaya').modal('show');
     });
 
-    // Add new Harga Biaya
-    $('.btnTambahHargaBiaya').click(function() {
-        $('#formHargaBiaya').trigger('reset');
-        $('#harga_biaya_id').val('');  // Reset ID field for new entry
-        $('#modalHargaBiaya').modal('show');
-    });
-
-    // Save Jenis Biaya with validation (Add/Edit)
+    // Simpan Jenis Biaya
     $('.saveJenisBiayaBtn').click(function() {
-        var jenisBiaya = $('#jenis_biaya').val();
-        var jenisBiayaId = $('#jenis_biaya_id').val();  // Check if ID exists for edit
-        if (jenisBiaya == "") {
+        const jenisBiaya = $('#jenis_biaya').val();
+        const id = $('#jenis_biaya_id').val();
+
+        if (!jenisBiaya.trim()) {
             alert("Jenis Biaya tidak boleh kosong!");
             return;
         }
 
-        var url = (jenisBiayaId) ? 'data_biaya/updateJenisBiaya' : 'data_biaya/saveJenisBiaya';  // Use correct URL for Add/Edit
-        var data = { jenis_biaya: jenisBiaya };
-
-        if (jenisBiayaId) {
-            data.id = jenisBiayaId;  // Include ID for update
-        }
-
+        const url = id ? 'data_biaya/updateJenisBiaya' : 'data_biaya/saveJenisBiaya';
         $.ajax({
             url: url,
             type: 'POST',
-            data: data,
+            data: { id, jenis_biaya: jenisBiaya },
             dataType: 'json',
             success: function(response) {
                 alert(response.message);
                 $('#modalJenisBiaya').modal('hide');
                 loadJenisBiaya();
+            },
+            error: function(xhr, status, error) {
+                console.error("Error saving Jenis Biaya:", error);
+                alert("Gagal menyimpan data Jenis Biaya.");
             }
         });
     });
 
-    // Save Harga Biaya with validation (Add/Edit)
+    // Tambah Harga Biaya
+    $('.btnTambahHargaBiaya').click(function() {
+        $('#formHargaBiaya').trigger('reset');
+        $('#harga_biaya_id').val('');
+        $('#modalHargaBiaya').modal('show');
+    });
+
+    // Simpan Harga Biaya
     $('.saveHargaBiayaBtn').click(function() {
-        var tahunPelajaran = $('#id_tahun_pelajaran').val();
-        var jenisBiaya = $('#jenis_biaya').val();
-        var harga = $('#harga').val();
-        var hargaBiayaId = $('#harga_biaya_id').val();  // Check if ID exists for edit
-        if (tahunPelajaran == "" || jenisBiaya == "" || harga == "") {
+        const idTahunPelajaran = $('#id_tahun_pelajaran').val();
+        const jenisBiaya = $('#jenis_biaya').val();
+        const harga = $('#harga').val();
+        const id = $('#harga_biaya_id').val();
+
+        if (!idTahunPelajaran || !jenisBiaya || !harga.trim()) {
             alert("Semua field harus diisi!");
             return;
         }
 
-        var url = (hargaBiayaId) ? 'data_biaya/updateHargaBiaya' : 'data_biaya/saveHargaBiaya';  // Use correct URL for Add/Edit
-        var data = {
-            id_tahun_pelajaran: tahunPelajaran,
-            jenis_biaya: jenisBiaya,
-            harga: harga
-        };
-
-        if (hargaBiayaId) {
-            data.id = hargaBiayaId;  // Include ID for update
-        }
-
+        const url = id ? 'data_biaya/updateHargaBiaya' : 'data_biaya/saveHargaBiaya';
         $.ajax({
             url: url,
             type: 'POST',
-            data: data,
+            data: { id, id_tahun_pelajaran: idTahunPelajaran, jenis_biaya: jenisBiaya, harga },
             dataType: 'json',
             success: function(response) {
                 alert(response.message);
                 $('#modalHargaBiaya').modal('hide');
                 loadHargaBiaya();
+            },
+            error: function(xhr, status, error) {
+                console.error("Error saving Harga Biaya:", error);
+                alert("Gagal menyimpan data Harga Biaya.");
             }
         });
     });
 
-    // Edit Jenis Biaya
+    // Fungsi global Edit & Hapus
     window.editJenisBiaya = function(id) {
         $.ajax({
             url: 'data_biaya/getJenisBiayaById',
             type: 'GET',
-            data: { id: id },
+            data: { id },
             success: function(response) {
-                $('#jenis_biaya_id').val(response.id);
-                $('#jenis_biaya').val(response.jenis_biaya);
-                $('#modalJenisBiaya').modal('show');
+                if (response) {
+                    $('#jenis_biaya_id').val(response.id);
+                    $('#jenis_biaya').val(response.jenis_biaya);
+                    $('#modalJenisBiaya').modal('show');
+                } else {
+                    alert("Data tidak ditemukan!");
+                }
             }
         });
     };
 
-    // Delete Jenis Biaya
     window.deleteJenisBiaya = function(id) {
-        if (confirm("Apakah Anda yakin ingin menghapus jenis biaya ini?")) {
+        if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
             $.ajax({
                 url: 'data_biaya/deleteJenisBiaya',
                 type: 'POST',
-                data: { id: id },
+                data: { id },
                 success: function(response) {
                     alert(response.message);
                     loadJenisBiaya();
@@ -295,12 +313,11 @@ $(document).ready(function() {
         }
     };
 
-    // Edit Harga Biaya
     window.editHargaBiaya = function(id) {
         $.ajax({
             url: 'data_biaya/getHargaBiayaById',
             type: 'GET',
-            data: { id: id },
+            data: { id },
             success: function(response) {
                 $('#harga_biaya_id').val(response.id);
                 $('#id_tahun_pelajaran').val(response.id_tahun_pelajaran);
@@ -311,13 +328,12 @@ $(document).ready(function() {
         });
     };
 
-    // Delete Harga Biaya
     window.deleteHargaBiaya = function(id) {
-        if (confirm("Apakah Anda yakin ingin menghapus harga biaya ini?")) {
+        if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
             $.ajax({
                 url: 'data_biaya/deleteHargaBiaya',
                 type: 'POST',
-                data: { id: id },
+                data: { id },
                 success: function(response) {
                     alert(response.message);
                     loadHargaBiaya();
@@ -326,5 +342,4 @@ $(document).ready(function() {
         }
     };
 });
-
 </script>
