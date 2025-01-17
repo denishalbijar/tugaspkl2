@@ -80,7 +80,7 @@
           </li>
 
           <li class="nav-item">
-            <a href="<?php echo base_url('user_akun') ?>" class="nav-link">
+            <a href="<?php echo base_url('#') ?>" class="nav-link">
               <i class="nav-icon fas fa-users"></i>
               <p>
                 Akun Pengguna
