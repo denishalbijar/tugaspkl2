@@ -303,7 +303,7 @@ function loadJenisBiaya() {
     var harga = $('#harga_biaya').val();
     let url = '<?php echo base_url('Data_biaya/save_harga_biaya'); ?>';
 
-    if (!id_tahun_pelajaran || !id_jenis_biaya || !harga_biaya) {
+    if (!id_tahun_pelajaran || !id_jenis_biaya || !harga) {
         alert('Semua bidang wajib diisi!');
         return;
     }
@@ -347,7 +347,7 @@ function tabelHargaBiaya() {
                     tr.append('<td>' + no++ + '</td>');
                     tr.append('<td>' + item.nama_tahun_pelajaran + '</td>');
                     tr.append('<td>' + item.jenis_biaya + '</td>');
-                    tr.append('<td>' + item.harga_biaya + '</td>');
+                    tr.append('<td>' + item.harga + '</td>');
                     tr.append(`
                         <td>
                             <button class="btn btn-primary" onclick="editHargaBiaya(${item.id})">Edit</button>
