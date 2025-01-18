@@ -101,7 +101,7 @@ class Data_biaya extends CI_Controller
         $id = $this->input->post('id');
         $id_jenis_biaya = $this->input->post('id_jenis_biaya');
         $id_tahun_pelajaran = $this->input->post('id_tahun_pelajaran');
-        $harga = $this->input->post('harga_biaya');
+        $harga = $this->input->post('harga');
 
         // Validasi jika input kosong
         if (empty($id_jenis_biaya) || empty($id_tahun_pelajaran) || empty($harga)) {
@@ -116,7 +116,7 @@ class Data_biaya extends CI_Controller
         $data = array(
             'id_jenis_biaya' => $id_jenis_biaya,
             'id_tahun_pelajaran' => $id_tahun_pelajaran,
-            'harga_biaya' => $harga,
+            'harga' => $harga,
             'updated_at' => date('Y-m-d H:i:s'),
             'deleted_at' => 0,
         );
