@@ -9,7 +9,8 @@ class Masterdata_model extends CI_Model
     protected $tableJurusan = 'data_jurusan';
     protected $tableBiaya = 'data_biaya';
     protected $tableHarga = 'data_harga';
-    protected $tableSeragam = 'data_seragam';
+    protected $tableJenisSeragam = 'jenis_seragam';
+    protected $tableStokSeragam = 'stok_seragam';
 
     public function __construct()
     {
@@ -323,56 +324,87 @@ class Masterdata_model extends CI_Model
        return $this->db->get($this->tableHarga);
    } 
 
-	public function getAllJenisSeragam()
+   public function updateJenisSeragam($id, $data)
+   {
+       $this->db->where('id', $id);
+       $this->db->update($this->tableJenisSeragam, $data);
+       return $this->db->affected_rows();
+   }
+   public function saveJenisSeragam($data)
+   {
+       $this->db->insert($this->tableJenisSeragam, $data);
+       return $this->db->insert_id();
+   }
+   public function getJenisSeragamByID($id)
+   {
+       $this->db->where('id', $id);
+       return $this->db->get($this->tableJenisSeragam);
+   }
+   public function getAllJenisSeragam()
+   {
+       return $this->db->get($this->tableJenisSeragam);
+   }
+   public function getAllJenisSeragamNotDeleted()
+   {
+       $this->db->where('deleted_at', 0);
+       return $this->db->get($this->tableJenisSeragam);
+   }
+
+   public function getAllDataStokSeragam()
+   {
+       $this->db->select($this->tableStokSeragam . '.*, ' . $this->tableJenisSeragam . '.nama_jenis_seragam, ');
+       $this->db->join($this->tableJenisSeragam, $this->tableJenisSeragam . '.id = ' . $this->tableStokSeragam . '.jenis_seragam_id', 'left');
+       return $this->db->get($this->tableStokSeragam);
+   }
+   public function getAllDataStokSeragamNotDeleted()
+   {
+       $this->db->select($this->tableStokSeragam . '.*, ' . $this->tableJenisSeragam . '.nama_jenis_seragam, ');
+       $this->db->join($this->tableJenisSeragam, $this->tableJenisSeragam . '.id = ' . $this->tableStokSeragam . '.jenis_seragam_id', 'left');
+       $this->db->where($this->tableStokSeragam . '.deleted_at', 0);
+       return $this->db->get($this->tableStokSeragam);
+   }
+   public function getDataStokSeragamByID($id)
+   {
+       $this->db->where('id', $id);
+       return $this->db->get($this->tableStokSeragam);
+   }
+   public function saveDataStokSeragam($data)
+   {
+       $this->db->insert($this->tableStokSeragam, $data);
+       return $this->db->insert_id();
+   }
+   public function updateDataStokSeragam($id, $data)
+   {
+       $this->db->where('id', $id);
+       $this->db->update($this->tableStokSeragam, $data);
+       return $this->db->affected_rows();
+   }
+   public function deleteDataStokSeragam($id)
+   {
+       $this->db->where('id', $id);
+       $this->db->delete($this->tableStokSeragam);
+       return $this->db->affected_rows();
+   }
+
+   public function cekJenisSeragamDuplicate($nama_jenis_seragam, $id = null)
 {
-    $this->db->where('deleted_at', 0);
-    return $this->db->get('jenis_seragam')->result_array();
+    if ($id) {
+        $this->db->where('id !=', $id); // Hindari duplikasi dengan ID tertentu
+    }
+    $this->db->where('nama_jenis_seragam', $nama_jenis_seragam);
+    return $this->db->get('jenis_seragam');
 }
 
-public function getAllStokSeragam()
+public function cekStokSeragamDuplicate($jenis_seragam_id, $ukuran_seragam, $id = null)
 {
-    $this->db->select('stok_seragam.*, jenis_seragam.nama_jenis_seragam');
-    $this->db->from('stok_seragam');
-    $this->db->join('jenis_seragam', 'stok_seragam.jenis_seragam_id = jenis_seragam.id');
-    $this->db->where('stok_seragam.deleted_at', 0);
-    return $this->db->get()->result_array();
-}
-
-public function saveJenisSeragam($data)
-{
-    $this->db->insert('jenis_seragam', $data);
-}
-
-public function saveStokSeragam($data)
-{
-    $this->db->insert('stok_seragam', $data);
-}
-
-public function deleteJenisSeragam($id)
-{
-    $this->db->where('id', $id);
-    $this->db->update('jenis_seragam', ['deleted_at' => 1]);
-}
-
-public function deleteStokSeragam($id)
-{
-    $this->db->where('id', $id);
-    $this->db->update('stok_seragam', ['deleted_at' => 1]);
-}
-
-public function updateJenisSeragam($id, $data)
-{
-    $this->db->where('id', $id);
-    $this->db->update('jenis_seragam', $data);
-}
-
-public function updateStokSeragam($id, $data)
-{
-    $this->db->where('id', $id);
-    $this->db->update('stok_seragam', $data);
+    if ($id) {
+        $this->db->where('id !=', $id); // Hindari duplikasi dengan ID tertentu
+    }
+    $this->db->where('jenis_seragam_id', $jenis_seragam_id);
+    $this->db->where('ukuran_seragam', $ukuran_seragam);
+    return $this->db->get('stok_seragam');
 }
 
 
-}
 
-/* End of file: Masterdata_model.php */
+}

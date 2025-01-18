@@ -1,148 +1,293 @@
-<div class="container">
-    <h3>Data Seragam</h3>
+<div class="card card-primary card-tabs">
+	<div class="card-header p-0 pt-1">
+		<ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+			<li class="nav-item">
+				<a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">Jenis Seragam</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">Stok Seragam</a>
+			</li>
 
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" href="#jenis">Jenis Seragam</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#stok">Stok Seragam</a>
-        </li>
-    </ul>
+		</ul>
+	</div>
+	<div class="card-body">
+		<div class="tab-content" id="custom-tabs-one-tabContent">
+			<div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+				<div class="btn btn-primary addBtn mb-1" data-target="jenis_seragam">
+					<i class="fas fa-plus"></i> Tambah
+				</div>
+				<div class="card">
 
-    <div class="tab-content">
-        <!-- Tab Jenis Seragam -->
-        <div class="tab-pane fade show active" id="jenis">
-    <h4>Jenis Seragam</h4>
-    <!-- Form Tambah Jenis Seragam -->
-    <form action="<?= base_url('data_seragam/tambahJenisSeragam') ?>" method="post" class="mb-4">
-        <input type="text" name="nama_jenis_seragam" placeholder="Nama Jenis Seragam" class="form-control d-inline w-50" required>
-        <button type="submit" class="btn btn-primary">Tambah</button>
-    </form>
+					<table id="table_jenis_seragam" class="table table-striped table-bordered mt-2">
+						<thead>
+							<tr>
+								<th style="text-align: center;">No</th>
+								<th style="text-align: center;">Jenis Seragam</th>
 
-    <!-- Tabel Jenis Seragam -->
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Nama Jenis Seragam</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($jenis_seragam as $index => $seragam): ?>
-            <tr>
-                <td><?= $index + 1 ?></td>
-                <td><?= $seragam['nama_jenis_seragam'] ?></td>
-                <td>
-                    <!-- Tombol Edit -->
-                    <button class="btn btn-warning" data-toggle="modal" data-target="#editJenisSeragamModal<?= $seragam['id'] ?>">Edit</button>
-                    <!-- Tombol Hapus -->
-                    <a href="<?= base_url('data_seragam/hapusJenisSeragam/' . $seragam['id']) ?>" class="btn btn-danger">Hapus</a>
-                </td>
-            </tr>
+								<th style="text-align: center;">Aksi</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
 
-            <!-- Modal Edit Jenis Seragam -->
-            <div class="modal fade" id="editJenisSeragamModal<?= $seragam['id'] ?>" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <form action="<?= base_url('data_seragam/editJenisSeragam/' . $seragam['id']) ?>" method="post">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Edit Jenis Seragam</h5>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                <!-- Input Edit Nama Jenis Seragam -->
-                                <input type="text" name="nama_jenis_seragam" class="form-control" value="<?= $seragam['nama_jenis_seragam'] ?>" required>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Simpan</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+					</table>
+				</div>
+			</div>
+			<div class="tab-pane fade" id="custom-tabs-one-profile" role="tabpanel" aria-labelledby="custom-tabs-one-profile-tab">
+				<div class="btn btn-primary addBtn mb-1" data-target="stok_seragam">
+					<i class="fas fa-plus"></i> Tambah
+				</div>
+				<div class="card">
+
+					<table id="table_stok_seragam" class="table table-striped table-bordered mt-2">
+						<thead>
+							<tr>
+								<th style="text-align: center;">No</th>
+								<th style="text-align: center;">Jenis Seragam</th>
+								<th style="text-align: center;">Ukuran</th>
+								<th style="text-align: center;">Stok</th>
+								<th style="text-align: center;">Aksi</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+
+					</table>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<!-- /.card -->
+</div>
+
+<div class="modal" id="modal_jenis_seragam" tabindex=" -1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Tambah Jenis Seragam</h5>
+
+				<button type="button" class="close " data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="form-user">
+					<form id="form_jenis_seragam" action="#" method="post" enctype="multipart/form-data">
+						<input type="hidden" class="form-control" id="id" name="id" value="">
+
+						<div class="mb-1">
+							<label for="nama_jenis_seragam" class="form-label">Nama Jenis seragam</label>
+							<input type="text" class="form-control" id="nama_jenis_seragam" name="nama_jenis_seragam" value="">
+							<div class="error-block"></div>
+						</div>
+					</form>
+
+					<div>
+
+					</div>
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary saveBtn" data-target="jenis_seragam">Simpan</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 
-        <!-- Tab Stok Seragam -->
-        <div class="tab-pane fade" id="stok">
-    <h4>Stok Seragam</h4>
-    <!-- Form Tambah Stok Seragam -->
-    <form action="<?= base_url('data_seragam/tambahStokSeragam') ?>" method="post" class="mb-4">
-        <select name="jenis_seragam_id" class="form-control w-50 d-inline" required>
-            <option value="">Pilih Jenis Seragam</option>
-            <?php foreach ($jenis_seragam as $seragam): ?>
-            <option value="<?= $seragam['id'] ?>"><?= $seragam['nama_jenis_seragam'] ?></option>
-            <?php endforeach; ?>
-        </select>
-        <input type="text" name="ukuran_seragam" placeholder="Ukuran Seragam" class="form-control d-inline w-25" required>
-        <input type="number" name="stok_seragam" placeholder="Stok Seragam" class="form-control d-inline w-25" required>
-        <button type="submit" class="btn btn-primary">Tambah</button>
-    </form>
+<div class="modal" id="modal_stok_seragam" tabindex=" -1" role="dialog">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Tambah Stok Jenis Seragam</h5>
 
-    <!-- Tabel Stok Seragam -->
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Jenis Seragam</th>
-                <th>Ukuran</th>
-                <th>Stok</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($stok_seragam as $index => $stok): ?>
-            <tr>
-                <td><?= $index + 1 ?></td>
-                <td><?= $stok['nama_jenis_seragam'] ?></td>
-                <td><?= $stok['ukuran_seragam'] ?></td>
-                <td><?= $stok['stok_seragam'] ?></td>
-                <td>
-                    <!-- Tombol Edit -->
-                    <button class="btn btn-warning" data-toggle="modal" data-target="#editStokSeragamModal<?= $stok['id'] ?>">Edit</button>
-                    <!-- Tombol Hapus -->
-                    <a href="<?= base_url('data_seragam/hapusStokSeragam/' . $stok['id']) ?>" class="btn btn-danger">Hapus</a>
-                </td>
-            </tr>
+				<button type="button" class="close " data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="form-user">
+					<form id="form_stok_seragam" action="#" method="post" enctype="multipart/form-data">
+						<input type="hidden" class="form-control" id="id" name="id" value="">
+						<div class="mb-1">
+							<label for="jenis_seragam_id" class="form-label">Jenis Seragam</label>
+							<select class="form-control" name="jenis_seragam_id" id="jenis_seragam_id">
+								<option value="">- Pilih Jenis Seragam -</option>
 
-            <!-- Modal Edit Stok Seragam -->
-            <div class="modal fade" id="editStokSeragamModal<?= $stok['id'] ?>" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <form action="<?= base_url('data_seragam/editStokSeragam/' . $stok['id']) ?>" method="post">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Edit Stok Seragam</h5>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                <!-- Select Jenis Seragam -->
-                                <select name="jenis_seragam_id" class="form-control" required>
-                                    <?php foreach ($jenis_seragam as $seragam): ?>
-                                    <option value="<?= $seragam['id'] ?>" <?= $seragam['id'] == $stok['jenis_seragam_id'] ? 'selected' : '' ?>>
-                                        <?= $seragam['nama_jenis_seragam'] ?>
-                                    </option>
-                                    <?php endforeach; ?>
-                                </select>
-                                <!-- Input Ukuran Seragam -->
-                                <input type="text" name="ukuran_seragam" class="form-control mt-2" value="<?= $stok['ukuran_seragam'] ?>" required>
-                                <!-- Input Stok Seragam -->
-                                <input type="number" name="stok_seragam" class="form-control mt-2" value="<?= $stok['stok_seragam'] ?>" required>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Simpan</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+							</select>
+							<div class="error-block"></div>
+						</div>
+
+
+						<div class="mb-1">
+							<label for="ukuran_seragam" class="form-label">Ukuran</label>
+							<select class="form-control" id="ukuran_seragam" name="ukuran_seragam">
+								<option value="">- Pilih Ukuran -</option>
+								<option value="S">S</option>
+								<option value="M">M</option>
+								<option value="L">L</option>
+								<option value="XL">XL</option>
+							</select>
+							<div class="error-block"></div>
+						</div>
+						<div class="mb-1">
+							<label for="stok_seragam" class="form-label">Stok Seragam</label>
+							<input type="text" class="form-control" name="stok_seragam" id="stok_seragam">
+
+							<div class="error-block"></div>
+						</div>
+
+
+					</form>
+
+					<div>
+
+					</div>
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary saveBtn" data-target="stok_seragam">Simpan</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+			</div>
+		</div>
+	</div>
 </div>
+
+<script src="<?php echo base_url('public/lib/crud.js'); ?>"></script>
+
+<script>
+	$(document).ready(function() {
+
+
+
+		$('#jenis_seragam_id').load('<?php echo base_url('seragam/getOptionJenisSeragam'); ?>');
+
+		loadTabel('jenis_seragam');
+		loadTabel('stok_seragam');
+
+	});
+
+	$('.addBtn').on('click', function() {
+		let target = $(this).data('target');
+		let form = '#form_' + target;
+		$(form + ' input[type = "hidden"]').val('');
+		$(form)[0].reset();
+
+		$('#modal_' + target).modal('show');
+	});
+
+	$('.saveBtn').on('click', function() {
+		let target = $(this).data('target'); // ambil target yang akan dituju (sebagai acuan)
+		let url = '<?php echo base_url('Seragam/save_'); ?>' + target; // buat url sesuai dengan target / acuan
+		let formData = new FormData($('#form_' + target)[0]); // ambil semua value yang ada di form yang namanya sesuai dengan form target
+		$.ajax({
+			url: url,
+			type: 'POST',
+			data: formData,
+			processData: false,
+			contentType: false,
+			dataType: 'json',
+			success: function(response) {
+				if (response.status) {
+					alert(response.message);
+					$('#modal_' + target).modal('hide');
+					loadTabel(target);
+				} else {
+					alert(response.message);
+				}
+			}
+		});
+	});
+
+
+	function loadTabel(target) {
+		let table = $('#table_' + target);
+		let url = '<?php echo base_url('Seragam/table_'); ?>' + target;
+
+		let tr = '';
+		$.ajax({
+			url: url,
+			type: 'GET',
+			dataType: 'json',
+			success: function(response) {
+				if (response.status) {
+					table.find('tbody').html('');
+					let no = 1;
+					if (target == 'jenis_seragam') {
+						$.each(response.data, function(i, item) {
+							tr = $('<tr>');
+							tr.append('<td>' + no++ + '</td>');
+							tr.append('<td>' + item.nama_jenis_seragam + '</td>');
+							tr.append('<td>	<button class="btn btn-primary editBtn" data-target="jenis_seragam" data-value="' + item.id + '">Edit</button> <button class="btn btn-danger deleteBtn" data-target="jenis_seragam" data-value="' + item.id + '">Delete</button></td>');
+							table.find('tbody').append(tr);
+						});
+					} else if (target == 'stok_seragam') {
+						$.each(response.data, function(i, item) {
+							tr = $('<tr>');
+							tr.append('<td>' + no++ + '</td>');
+							tr.append('<td>' + item.nama_jenis_seragam + '</td>');
+							tr.append('<td>' + item.ukuran_seragam + '</td>');
+							tr.append('<td>' + item.stok_seragam + '</td>');
+							tr.append('<td>	<button class="btn btn-primary editBtn" data-target="stok_seragam" data-value="' + item.id + '">Edit</button> <button class="btn btn-danger deleteBtn" data-target="stok_seragam" data-value="' + item.id + '">Delete</button></td>');
+							table.find('tbody').append(tr);
+						});
+					}
+
+				} else {
+					tr = $('<tr>');
+					table.find('tbody').html('');
+					tr.append('<td colspan="4">' + response.message + '</td>');
+				}
+			}
+		});
+	}
+
+	$(document).on('click', '.editBtn', function() {
+		let target = $(this).data('target');
+		let id = $(this).data('value');
+		console.log(target);
+		let url = '<?php echo base_url('Seragam/edit_'); ?>' + target + '/' + id;
+		let form = '#form_' + target;
+		$.ajax({
+			url: url,
+			type: 'GET',
+			dataType: 'json',
+			success: function(response) {
+				if (response.status) {
+					$.each(response.data, function(i, item) {
+						$(form + ' [name="' + i + '"]').val(item);
+					});
+
+
+					$('#modal_' + target).modal('show');
+				} else {
+					alert(response.message);
+				}
+			}
+		});
+	});
+
+	$(document).on('click', '.deleteBtn', function() {
+		let target = $(this).data('target');
+		let id = $(this).data('value');
+		let url = '<?php echo base_url('Seragam/delete_'); ?>' + target + '/' + id;
+		let form = '#form_' + target;
+		$.ajax({
+			url: url,
+			type: 'GET',
+			dataType: 'json',
+			success: function(response) {
+				if (response.status) {
+					alert(response.message);
+					loadTabel(target);
+				} else {
+					alert(response.message);
+				}
+			}
+		});
+	})
+</script>
