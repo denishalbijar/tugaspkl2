@@ -40,7 +40,7 @@ class Jurusan extends CI_Controller
 		echo json_encode($ret);
 	}
 
-	public function option_tahun_pelajaran()
+	public function getoption_tahun_pelajaran()
 	{
 		$q = $this->md->getAllTahunPelajaranNotDeleted();
 		$ret = '';
@@ -52,7 +52,7 @@ class Jurusan extends CI_Controller
 		echo $ret;
 	}
 
-	public function save()
+	public function save_jurusan()
 	{
 
 		$id = $this->input->post('id');
@@ -97,9 +97,9 @@ class Jurusan extends CI_Controller
 		echo json_encode($ret);
 	}
 
-	public function delete()
+	public function delete_jurusan($id)
 	{
-		$id = $this->input->post('id');
+		// $id = $this->input->post('id');
 		$data['deleted_at'] = time();
 		$q = $this->md->updateJurusan($id, $data);
 		if ($q) {
@@ -111,10 +111,10 @@ class Jurusan extends CI_Controller
 		}
 		echo json_encode($ret);
 	}
-	public function edit()
+	
+	public function edit_jurusan($id)
 	{
-
-		$id = $this->input->post('id');
+		// $id = $this->input->post('id');
 		$q = $this->md->getJurusanByID($id);
 		if ($q->num_rows() > 0) {
 			$ret = array(

@@ -103,13 +103,14 @@ class Masterdata_model extends CI_Model
         $this->db->insert($this->tableTahunPelajaran, $data);
         return $this->db->insert_id();
     }
+    
     public function updateTahunPelajaran($id, $data)
-    {
-        $this->db->where('id', $id);
-        $this->db->update($this->tableTahunPelajaran, $data);
-        return $this->db->affected_rows();
-    }
-
+	{
+		$this->db->where('id', $id);
+		$this->db->update($this->tableTahunPelajaran, $data);
+		return $this->db->affected_rows();
+	}
+    
     public function deleteTahunPelajaran($id)
     {
         $this->db->where('id', $id);
@@ -131,10 +132,11 @@ class Masterdata_model extends CI_Model
     }
 
     public function getJurusanByID($id)
-    {
-        $this->db->where('id', $id);
-        return $this->db->get($this->tableJurusan);
-    }
+	{
+		$this->db->where('id', $id);
+		return $this->db->get($this->tableJurusan);
+	}
+
 
     public function getJurusanByTahunPelajaranID($id)
     {
@@ -159,11 +161,12 @@ class Masterdata_model extends CI_Model
     }
 
     public function updateJurusan($id, $data)
-    {
-        $this->db->where('id', $id);
-        $this->db->update($this->tableJurusan, $data);
-        return $this->db->affected_rows();
-    }
+	{
+		$this->db->where('id', $id);
+		$this->db->update($this->tableJurusan, $data);
+		return $this->db->affected_rows();
+	}
+
 
     public function deleteJurusan($id)
     {
@@ -238,10 +241,9 @@ class Masterdata_model extends CI_Model
 
    // Mendapatkan semua data jenis biaya
    public function getAllJenisBiaya()
-   {
-       return $this->db->get($this->tableBiaya)->result_array();
-   }
-
+	{
+		return $this->db->get($this->tableBiaya);
+	}
    // Menyimpan data jenis biaya
    public function saveJenisBiaya($jenis_biaya)
    {
@@ -280,12 +282,13 @@ class Masterdata_model extends CI_Model
    {
        $this->db->where('id', $id);
        $this->db->delete($this->tableBiaya);
+       return $this->db->affected_rows();
    }
-
    // Mendapatkan jenis biaya berdasarkan ID untuk di-edit
-   public function getJenisBiayaById($id)
+   public function getJenisBiayaByID($id)
    {
-       return $this->db->get_where($this->tableBiaya, ['id' => $id])->row();
+       $this->db->where('id', $id);
+       return $this->db->get($this->tableBiaya);
    }
 
    

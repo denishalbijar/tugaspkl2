@@ -199,7 +199,7 @@ class Seragam extends CI_Controller
 		}
 		echo json_encode($ret);
 	}
-	public function getOptionJenisSeragam()
+	public function getOption_Jenis_Seragam()
 	{
 		$q = $this->md->getAllJenisSeragamNotDeleted();
 		$opt = '<option value="">-- Pilih Jenis Seragam --</option>';

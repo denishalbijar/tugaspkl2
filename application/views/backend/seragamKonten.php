@@ -18,13 +18,12 @@
 				</div>
 				<div class="card">
 
-					<table id="table_jenis_seragam" class="table table-striped table-bordered mt-2">
+					<table id="table_jenis_seragam" data-target="jenis_seragam" class="table table-striped table-bordered mt-2">
 						<thead>
 							<tr>
-								<th style="text-align: center;">No</th>
-								<th style="text-align: center;">Jenis Seragam</th>
-
-								<th style="text-align: center;">Aksi</th>
+								<th data-key="id" style="text-align: center;">No</th>
+								<th data-key="nama_jenis_seragam" style="text-align: center;">Jenis Seragam</th>
+								<th data-key="btn_aksi" style="text-align: center;">Aksi</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -39,14 +38,14 @@
 				</div>
 				<div class="card">
 
-					<table id="table_stok_seragam" class="table table-striped table-bordered mt-2">
+					<table id="table_stok_seragam" data-target="stok_seragam" class="table table-striped table-bordered mt-2">
 						<thead>
 							<tr>
-								<th style="text-align: center;">No</th>
-								<th style="text-align: center;">Jenis Seragam</th>
-								<th style="text-align: center;">Ukuran</th>
-								<th style="text-align: center;">Stok</th>
-								<th style="text-align: center;">Aksi</th>
+								<th data-key="id" style="text-align: center;">No</th>
+								<th data-key="nama_jenis_seragam" style="text-align: center;">Jenis Seragam</th>
+								<th data-key="ukuran_seragam" style="text-align: center;">Ukuran</th>
+								<th data-key="stok_seragam" style="text-align: center;">Stok</th>
+								<th data-key="btn_aksi" style="text-align: center;">Aksi</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -114,7 +113,7 @@
 						<input type="hidden" class="form-control" id="id" name="id" value="">
 						<div class="mb-1">
 							<label for="jenis_seragam_id" class="form-label">Jenis Seragam</label>
-							<select class="form-control" name="jenis_seragam_id" id="jenis_seragam_id">
+							<select class="form-control loadSelect" data-target="jenis_seragam" name="jenis_seragam_id" id="jenis_seragam_id">
 								<option value="">- Pilih Jenis Seragam -</option>
 
 							</select>
@@ -140,11 +139,8 @@
 							<div class="error-block"></div>
 						</div>
 
-
 					</form>
-
 					<div>
-
 					</div>
 
 				</div>
@@ -157,137 +153,4 @@
 	</div>
 </div>
 
-<script src="<?php echo base_url('public/lib/crud.js'); ?>"></script>
-
-<script>
-	$(document).ready(function() {
-
-
-
-		$('#jenis_seragam_id').load('<?php echo base_url('seragam/getOptionJenisSeragam'); ?>');
-
-		loadTabel('jenis_seragam');
-		loadTabel('stok_seragam');
-
-	});
-
-	$('.addBtn').on('click', function() {
-		let target = $(this).data('target');
-		let form = '#form_' + target;
-		$(form + ' input[type = "hidden"]').val('');
-		$(form)[0].reset();
-
-		$('#modal_' + target).modal('show');
-	});
-
-	$('.saveBtn').on('click', function() {
-		let target = $(this).data('target'); // ambil target yang akan dituju (sebagai acuan)
-		let url = '<?php echo base_url('Seragam/save_'); ?>' + target; // buat url sesuai dengan target / acuan
-		let formData = new FormData($('#form_' + target)[0]); // ambil semua value yang ada di form yang namanya sesuai dengan form target
-		$.ajax({
-			url: url,
-			type: 'POST',
-			data: formData,
-			processData: false,
-			contentType: false,
-			dataType: 'json',
-			success: function(response) {
-				if (response.status) {
-					alert(response.message);
-					$('#modal_' + target).modal('hide');
-					loadTabel(target);
-				} else {
-					alert(response.message);
-				}
-			}
-		});
-	});
-
-
-	function loadTabel(target) {
-		let table = $('#table_' + target);
-		let url = '<?php echo base_url('Seragam/table_'); ?>' + target;
-
-		let tr = '';
-		$.ajax({
-			url: url,
-			type: 'GET',
-			dataType: 'json',
-			success: function(response) {
-				if (response.status) {
-					table.find('tbody').html('');
-					let no = 1;
-					if (target == 'jenis_seragam') {
-						$.each(response.data, function(i, item) {
-							tr = $('<tr>');
-							tr.append('<td>' + no++ + '</td>');
-							tr.append('<td>' + item.nama_jenis_seragam + '</td>');
-							tr.append('<td>	<button class="btn btn-primary editBtn" data-target="jenis_seragam" data-value="' + item.id + '">Edit</button> <button class="btn btn-danger deleteBtn" data-target="jenis_seragam" data-value="' + item.id + '">Delete</button></td>');
-							table.find('tbody').append(tr);
-						});
-					} else if (target == 'stok_seragam') {
-						$.each(response.data, function(i, item) {
-							tr = $('<tr>');
-							tr.append('<td>' + no++ + '</td>');
-							tr.append('<td>' + item.nama_jenis_seragam + '</td>');
-							tr.append('<td>' + item.ukuran_seragam + '</td>');
-							tr.append('<td>' + item.stok_seragam + '</td>');
-							tr.append('<td>	<button class="btn btn-primary editBtn" data-target="stok_seragam" data-value="' + item.id + '">Edit</button> <button class="btn btn-danger deleteBtn" data-target="stok_seragam" data-value="' + item.id + '">Delete</button></td>');
-							table.find('tbody').append(tr);
-						});
-					}
-
-				} else {
-					tr = $('<tr>');
-					table.find('tbody').html('');
-					tr.append('<td colspan="4">' + response.message + '</td>');
-				}
-			}
-		});
-	}
-
-	$(document).on('click', '.editBtn', function() {
-		let target = $(this).data('target');
-		let id = $(this).data('value');
-		console.log(target);
-		let url = '<?php echo base_url('Seragam/edit_'); ?>' + target + '/' + id;
-		let form = '#form_' + target;
-		$.ajax({
-			url: url,
-			type: 'GET',
-			dataType: 'json',
-			success: function(response) {
-				if (response.status) {
-					$.each(response.data, function(i, item) {
-						$(form + ' [name="' + i + '"]').val(item);
-					});
-
-
-					$('#modal_' + target).modal('show');
-				} else {
-					alert(response.message);
-				}
-			}
-		});
-	});
-
-	$(document).on('click', '.deleteBtn', function() {
-		let target = $(this).data('target');
-		let id = $(this).data('value');
-		let url = '<?php echo base_url('Seragam/delete_'); ?>' + target + '/' + id;
-		let form = '#form_' + target;
-		$.ajax({
-			url: url,
-			type: 'GET',
-			dataType: 'json',
-			success: function(response) {
-				if (response.status) {
-					alert(response.message);
-					loadTabel(target);
-				} else {
-					alert(response.message);
-				}
-			}
-		});
-	})
-</script>
+<script src="./public/lib/crud.js"></script>
