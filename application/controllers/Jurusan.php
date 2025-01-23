@@ -8,6 +8,7 @@ class Jurusan extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('Masterdata_model', 'md');
+		$this->load->library('form_validation'); // Load library form_validation
 	}
 
 	public function index()
@@ -54,67 +55,73 @@ class Jurusan extends CI_Controller
 
 	public function save_jurusan()
 	{
+		// Set validation rules
+		$this->form_validation->set_rules('nama_jurusan', 'Nama Jurusan', 'required|trim');
+		$this->form_validation->set_rules('id_tahun_pelajaran', 'ID Tahun Pelajaran', 'required|numeric');
+
+		if ($this->form_validation->run() == FALSE) {
+			// Return validation errors
+			$ret['status'] = false;
+			$ret['message'] = validation_errors();
+			echo json_encode($ret);
+			return;
+		}
 
 		$id = $this->input->post('id');
-		$id_tahun_pelajaran = $this->input->post('id_tahun_pelajaran');
 		$data['nama_jurusan'] = $this->input->post('nama_jurusan');
 		$data['id_tahun_pelajaran'] = $this->input->post('id_tahun_pelajaran');
 		$data['created_at'] = date('Y-m-d H:i:s');
 		$data['updated_at'] = date('Y-m-d H:i:s');
 		$data['deleted_at'] = 0;
 
-		if ($data['nama_jurusan']) {
-			$cek = $this->md->cekJurusanDuplicate($data['nama_jurusan'], $id_tahun_pelajaran, $id);
-			if ($cek->num_rows() > 0) {
-				$ret['status'] = false;
-				$ret['message'] = 'Jurusan sudah ada';
-			} else {
-
-				if ($id) {
-					$q = $this->md->updateJurusan($id, $data);
-					if ($q) {
-						$ret['status'] = true;
-						$ret['message'] = 'Data berhasil diupdate';
-					} else {
-						$ret['status'] = false;
-						$ret['message'] = 'Data gagal diupdate';
-					}
-				} else {
-					$q = $this->md->saveJurusan($data);
-					if ($q) {
-						$ret['status'] = true;
-						$ret['message'] = 'Data berhasil disimpan';
-					} else {
-						$ret['status'] = false;
-						$ret['message'] = 'Data gagal disimpan';
-					}
-				}
-			}
-		} else {
+		$cek = $this->md->cekJurusanDuplicate($data['nama_jurusan'], $data['id_tahun_pelajaran'], $id);
+		if ($cek->num_rows() > 0) {
 			$ret['status'] = false;
-			$ret['message'] = 'Data gagal disimpan';
+			$ret['message'] = 'Jurusan sudah ada';
+		} else {
+			if ($id) {
+				$q = $this->md->updateJurusan($id, $data);
+				$ret['status'] = $q ? true : false;
+				$ret['message'] = $q ? 'Data berhasil diupdate' : 'Data gagal diupdate';
+			} else {
+				$q = $this->md->saveJurusan($data);
+				$ret['status'] = $q ? true : false;
+				$ret['message'] = $q ? 'Data berhasil disimpan' : 'Data gagal disimpan';
+			}
 		}
+
 		echo json_encode($ret);
 	}
 
 	public function delete_jurusan($id)
 	{
-		// $id = $this->input->post('id');
+		if (!$id) {
+			$ret = array(
+				'status' => false,
+				'message' => 'ID tidak boleh kosong'
+			);
+			echo json_encode($ret);
+			return;
+		}
+
 		$data['deleted_at'] = time();
 		$q = $this->md->updateJurusan($id, $data);
-		if ($q) {
-			$ret['status'] = true;
-			$ret['message'] = 'Data berhasil dihapus';
-		} else {
-			$ret['status'] = false;
-			$ret['message'] = 'Data gagal dihapus';
-		}
+		$ret['status'] = $q ? true : false;
+		$ret['message'] = $q ? 'Data berhasil dihapus' : 'Data gagal dihapus';
 		echo json_encode($ret);
 	}
 	
 	public function edit_jurusan($id)
 	{
-		// $id = $this->input->post('id');
+		if (!$id) {
+			$ret = array(
+				'status' => false,
+				'message' => 'ID tidak boleh kosong'
+			);
+			echo json_encode($ret);
+			return;
+		}
+
 		$q = $this->md->getJurusanByID($id);
 		if ($q->num_rows() > 0) {
 			$ret = array(
@@ -126,8 +133,7 @@ class Jurusan extends CI_Controller
 			$ret = array(
 				'status' => false,
 				'data' => [],
-				'message' => 'Data tidak ditemukan',
-				'query' => $this->db->last_query()
+				'message' => 'Data tidak ditemukan'
 			);
 		}
 
