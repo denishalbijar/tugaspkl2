@@ -17,11 +17,11 @@
         <div class="tab-content" id="custom-tabs-one-tabContent">
             <!-- Data Siswa Tab -->
             <div class="tab-pane fade show active" id="custom-tabs-one-siswa" role="tabpanel" aria-labelledby="custom-tabs-one-siswa-tab">
-                <button class="btn btn-primary mb-1" data-toggle="modal" data-target="#modal_siswa">
+                <button class="btn btn-primary mb-1 addBtn" data-target="siswa">
                     <i class="fas fa-plus"></i> Tambah Siswa
                 </button>
                 <div class="card">
-                    <table id="table_siswa" class="table table-striped table-bordered mt-2">
+                    <table id="table_siswa" class="table table-striped table-bordered mt-2" data-target="siswa">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -40,11 +40,11 @@
 
             <!-- Data Orang Tua Tab -->
             <div class="tab-pane fade" id="custom-tabs-one-orangtua" role="tabpanel" aria-labelledby="custom-tabs-one-orangtua-tab">
-                <button class="btn btn-primary mb-1" data-toggle="modal" data-target="#modal_orangtua">
+                <button class="btn btn-primary mb-1 addBtn" data-target="orangtua">
                     <i class="fas fa-plus"></i> Tambah Orang Tua
                 </button>
                 <div class="card">
-                    <table id="table_orangtua" class="table table-striped table-bordered mt-2">
+                    <table id="table_orangtua" class="table table-striped table-bordered mt-2" data-target="orangtua">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -63,11 +63,11 @@
 
             <!-- Data Kelas Tab -->
             <div class="tab-pane fade" id="custom-tabs-one-kelas" role="tabpanel" aria-labelledby="custom-tabs-one-kelas-tab">
-                <button class="btn btn-primary mb-1" data-toggle="modal" data-target="#modal_kelas">
+                <button class="btn btn-primary mb-1 addBtn" data-target="kelas">
                     <i class="fas fa-plus"></i> Tambah Kelas
                 </button>
                 <div class="card">
-                    <table id="table_kelas" class="table table-striped table-bordered mt-2">
+                    <table id="table_kelas" class="table table-striped table-bordered mt-2" data-target="kelas">
                         <thead>
                             <tr>
                                 <th>No</th>
@@ -97,7 +97,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="simpan_siswa.php" method="POST">
+                <form id="form_siswa">
                     <div class="form-group">
                         <label for="nama_siswa">Nama Siswa</label>
                         <input type="text" class="form-control" id="nama_siswa" name="nama_siswa" required>
@@ -113,7 +113,7 @@
                             <option value="P">Perempuan</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="button" class="btn btn-primary saveBtn" data-target="siswa">Simpan</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                 </form>
             </div>
@@ -132,7 +132,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="simpan_orangtua.php" method="POST">
+                <form id="form_orangtua">
                     <div class="form-group">
                         <label for="nama_ayah">Nama Ayah</label>
                         <input type="text" class="form-control" id="nama_ayah" name="nama_ayah" required>
@@ -145,7 +145,7 @@
                         <label for="no_telepon_ayah">No Telepon Ayah</label>
                         <input type="text" class="form-control" id="no_telepon_ayah" name="no_telepon_ayah" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="button" class="btn btn-primary saveBtn" data-target="orangtua">Simpan</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                 </form>
             </div>
@@ -164,7 +164,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="simpan_kelas.php" method="POST">
+                <form id="form_kelas">
                     <div class="form-group">
                         <label for="nama_kelas">Nama Kelas</label>
                         <input type="text" class="form-control" id="nama_kelas" name="nama_kelas" required>
@@ -173,10 +173,171 @@
                         <label for="jurusan_kelas">Jurusan</label>
                         <input type="text" class="form-control" id="jurusan_kelas" name="jurusan_kelas" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="button" class="btn btn-primary saveBtn" data-target="kelas">Simpan</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<script src="./public/lib/crud.js"></script>
+
+<script>
+$(document).ready(function () {
+
+    // DataTables initialization
+    const tableSiswa = $('#table_siswa').DataTable({
+        ajax: {
+            url: '/pendaftaran_awal/table_siswa',
+            type: 'GET',
+            dataSrc: 'data'
+        },
+        columns: [
+            { data: 'id' },
+            { data: 'nama_siswa' },
+            { data: 'nik' },
+            { data: 'jenis_kelamin' },
+            {
+                data: null,
+                render: function (data, type, row) {
+                    return `<button class="btn btn-warning btn-sm editBtn" data-id="${row.id}" data-target="siswa">Edit</button>`;
+                }
+            }
+        ]
+    });
+
+    const tableOrangtua = $('#table_orangtua').DataTable({
+        ajax: {
+            url: '/pendaftaran_awal/table_orangtua',
+            type: 'GET',
+            dataSrc: 'data'
+        },
+        columns: [
+            { data: 'id' },
+            { data: 'nama_ayah' },
+            { data: 'nama_ibu' },
+            { data: 'no_telepon_ayah' },
+            {
+                data: null,
+                render: function (data, type, row) {
+                    return `<button class="btn btn-warning btn-sm editBtn" data-id="${row.id}" data-target="orangtua">Edit</button>`;
+                }
+            }
+        ]
+    });
+
+    const tableKelas = $('#table_kelas').DataTable({
+        ajax: {
+            url: '/pendaftaran_awal/table_kelas',
+            type: 'GET',
+            dataSrc: 'data'
+        },
+        columns: [
+            { data: 'id' },
+            { data: 'nama_kelas' },
+            { data: 'id_jurusan' },
+            {
+                data: null,
+                render: function (data, type, row) {
+                    return `<button class="btn btn-warning btn-sm editBtn" data-id="${row.id}" data-target="kelas">Edit</button>`;
+                }
+            }
+        ]
+    });
+
+    // Event handler for Add button
+    $('.addBtn').on('click', function () {
+        const target = $(this).data('target');
+        openModal(target);
+    });
+
+    // Event handler for Edit button
+    $(document).on('click', '.editBtn', function () {
+        const id = $(this).data('id');
+        const target = $(this).data('target');
+        getEditData(id, target);
+        openModal(target);
+    });
+
+    // Open modal for add/edit
+    function openModal(target) {
+        switch (target) {
+            case 'siswa':
+                $('#modal_siswa').modal('show');
+                break;
+            case 'orangtua':
+                $('#modal_orangtua').modal('show');
+                break;
+            case 'kelas':
+                $('#modal_kelas').modal('show');
+                break;
+        }
+    }
+
+    // Fetch data for editing (AJAX)
+    function getEditData(id, target) {
+        $.ajax({
+            url: `/pendaftaran_awal/get_${target}_by_id/${id}`,
+            type: 'GET',
+            success: function (response) {
+                const data = response.data;
+                switch (target) {
+                    case 'siswa':
+                        $('#nama_siswa').val(data.nama_siswa);
+                        $('#nik_siswa').val(data.nik);
+                        $('#jenis_kelamin_siswa').val(data.jenis_kelamin);
+                        break;
+                    case 'orangtua':
+                        $('#nama_ayah').val(data.nama_ayah);
+                        $('#nama_ibu').val(data.nama_ibu);
+                        $('#no_telepon_ayah').val(data.no_telepon_ayah);
+                        break;
+                    case 'kelas':
+                        $('#nama_kelas').val(data.nama_kelas);
+                        $('#jurusan_kelas').val(data.jurusan);
+                        break;
+                }
+            }
+        });
+    }
+
+    // Save Data (AJAX)
+    $('.saveBtn').on('click', function () {
+        const target = $(this).data('target');
+        const form = $(`#form_${target}`);
+        const formData = form.serialize(); // Serialize the form data
+        
+        $.ajax({
+            url: `/pendaftaran_awal/save_${target}`,
+            type: 'POST',
+            data: formData,
+            success: function (response) {
+                if (response.status) {
+                    alert(response.message);
+                    $('#modal_' + target).modal('hide');
+                    reloadTable(target); // Reload table after saving
+                } else {
+                    alert('Error saving data');
+                }
+            }
+        });
+    });
+
+    // Reload DataTable based on target (siswa, orangtua, kelas)
+    function reloadTable(target) {
+        switch (target) {
+            case 'siswa':
+                tableSiswa.ajax.reload();
+                break;
+            case 'orangtua':
+                tableOrangtua.ajax.reload();
+                break;
+            case 'kelas':
+                tableKelas.ajax.reload();
+                break;
+        }
+    }
+
+});
+</script>
